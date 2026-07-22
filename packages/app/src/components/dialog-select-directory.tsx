@@ -52,7 +52,7 @@ function uniqueRows(rows: Row[]) {
 
 export function DialogSelectDirectory(props: DialogSelectDirectoryProps) {
   const global = useGlobal()
-  const { sync, sdk, ...serverCtx } = global.ensureServerCtx(props.server)
+  const { sync, sdk } = global.ensureServerCtx(props.server)
   const dialog = useDialog()
   const language = useLanguage()
 
@@ -84,27 +84,11 @@ export function DialogSelectDirectory(props: DialogSelectDirectoryProps) {
   })
 
   const recentProjects = createMemo(() => {
-    const projects = serverCtx.projects.list()
-    const byProject = new Map<string, number>()
-
-    for (const project of projects) {
-      let at = 0
-      const dirs = [project.worktree, ...(project.sandboxes ?? [])]
-      for (const directory of dirs) {
-        const sessions = sync.child(directory, { bootstrap: false })[0].session
-        for (const session of sessions) {
-          if (session.time.archived) continue
-          const updated = session.time.updated ?? session.time.created
-          if (updated > at) at = updated
-        }
-      }
-      byProject.set(project.worktree, at)
-    }
-
-    return projects
-      .map((project, index) => ({ project, at: byProject.get(project.worktree) ?? 0, index }))
-      .sort((a, b) => b.at - a.at || a.index - b.index)
-      .map(({ project }) => {
+    return sync.data.project
+      .slice()
+      .filter(x => x.worktree !== '/')
+      .sort((a, b) => (b.time.updated ?? b.time.created) - (a.time.updated ?? a.time.created))
+      .map((project) => {
         const row = toRow(project.worktree, home(), "recent")
         const name = project.name || getFilename(project.worktree)
         return {
