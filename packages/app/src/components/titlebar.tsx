@@ -450,7 +450,7 @@ export function Titlebar(props: { update?: TitlebarUpdate; debugTools?: { visibl
                 <WindowsAppMenu command={command} platform={platform} />
               </Show>
               <Show when={mac()}>
-                <div class="xl:hidden w-10 shrink-0 flex items-center justify-center">
+                <div class="md:hidden w-10 shrink-0 flex items-center justify-center">
                   <IconButton
                     icon="menu"
                     variant="ghost"
@@ -462,7 +462,7 @@ export function Titlebar(props: { update?: TitlebarUpdate; debugTools?: { visibl
                 </div>
               </Show>
               <Show when={!mac()}>
-                <div class="xl:hidden w-[48px] shrink-0 flex items-center justify-center">
+                <div class="md:hidden w-[48px] shrink-0 flex items-center justify-center">
                   <IconButton
                     icon="menu"
                     variant="ghost"
@@ -475,7 +475,7 @@ export function Titlebar(props: { update?: TitlebarUpdate; debugTools?: { visibl
               </Show>
               <div class="flex items-center gap-1 shrink-0">
                 <TooltipKeybind
-                  class={web() ? "hidden xl:flex shrink-0 ml-14" : "hidden xl:flex shrink-0 ml-2"}
+                  class={web() ? "hidden md:flex shrink-0 ml-14" : "hidden md:flex shrink-0 ml-2"}
                   placement="bottom"
                   title={language.t("command.sidebar.toggle")}
                   keybind={command.keybind("sidebar.toggle")}
@@ -490,7 +490,7 @@ export function Titlebar(props: { update?: TitlebarUpdate; debugTools?: { visibl
                     <Icon size="small" name={layout.sidebar.opened() ? "sidebar-active" : "sidebar"} />
                   </Button>
                 </TooltipKeybind>
-                <div class="hidden xl:flex items-center shrink-0">
+                <div class="hidden md:flex items-center shrink-0">
                   <Show when={params.dir}>
                     <div
                       class="flex items-center shrink-0 w-8 mr-1"
