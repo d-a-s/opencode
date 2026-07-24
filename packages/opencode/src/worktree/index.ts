@@ -435,15 +435,12 @@ const layer: Layer.Layer<
 
       yield* cleanDirectory(entry.path)
 
-      const branch = entry.branch?.replace(/^refs\/heads\//, "")
-      if (branch) {
-        const deleted = yield* git(["branch", "-D", branch], { cwd: ctx.worktree })
-        if (deleted.code !== 0) {
-          return yield* new RemoveFailedError({
-            message: deleted.stderr || deleted.text || "Failed to delete worktree branch",
-          })
-        }
-      }
+      // Always clean up the auto-generated opencode/<dir-name> branch,
+      // even if the user switched to a different branch in the workspace
+      const autoBranch: string = `opencode/${pathSvc.basename(directory)}`
+      yield* git(["branch", "-D", autoBranch], { cwd: ctx.worktree }).pipe(
+        Effect.catch(() => Effect.void),
+      )
 
       return true
     })
